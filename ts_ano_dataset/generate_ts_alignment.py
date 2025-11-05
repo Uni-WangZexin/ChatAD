@@ -105,9 +105,11 @@ def univariate_seed_qa():
             timeseries, ENCODING_METHOD
         )
         scaled_timeseries = [round(num, 3) for num in scaled_timeseries]
+        scaled_timeseries = [float(i) for i in scaled_timeseries]
         instruction = f"You are a time series analysis expert. There is a metric called {metric} collected from {category}, mean of it is {feature['mean']}, standard deviation of it is {feature['std']}. After z-score standardization, the time series is: {str(list(scaled_timeseries))}. To get the original value, you need to use the following formula:\n\n$origin_x = x*std + mean$\n\n"
     else:
         scaled_timeseries = [round(num, 3) for num in timeseries]
+        scaled_timeseries = [float(i) for i in scaled_timeseries]
         instruction = f"You are a time series analysis expert. This is a metric called {metric} collected from {category}: {str(list(scaled_timeseries))}. "
 
     # Generate QA

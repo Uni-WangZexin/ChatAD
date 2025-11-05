@@ -1530,7 +1530,7 @@ def attribute_to_text(
                 detailed_description += attribute_pool["seasonal"]["detail"]
 
     if "anomaly" in include_attributes:
-        diff = [round(num, 3) for num in np.diff(time_series)]
+        diff = [float(round(num, 3)) for num in np.diff(time_series)]
         anomaly_index = []
         if cot:
             if wrong_answer:
@@ -1618,7 +1618,7 @@ def attribute_to_text(
                     detailed_description += f"\nWe only consider the indexes of the most abnormal part of all local changes as the anomalous indexes. Therefore, all anomalous indexes are: {str(anomaly_index)}."
 
     if "diff" in include_attributes:
-        diff = [round(num, 3) for num in np.diff(time_series)]
+        diff = [float(round(num, 3)) for num in np.diff(time_series)]
         if cot:
             if wrong_answer:
                 detailed_description += f"To calculate the difference sequence between two adjacent points of the time series, we can scan the time series sequentially and calculate the difference one by one."
@@ -1626,7 +1626,7 @@ def attribute_to_text(
             else:
                 detailed_description += f"To calculate the difference sequence between two adjacent points of the time series, we can scan the time series sequentially and calculate the difference one by one. Here's the step-by-step process:\n"
                 detailed_description += f"# Step 1: calculate the Difference\n"
-                diff = [round(num, 3) for num in np.diff(time_series)]
+                diff = [float(round(num, 3)) for num in np.diff(time_series)]
                 for i in range(min(10, len(time_series) - 1)):
                     detailed_description += f"{str(i)}. {str(time_series[i+1])} - {str(time_series[i])} = {str(round(time_series[i+1]- time_series[i], 3))}\n"
                 detailed_description += f"\n......\n"
@@ -1672,6 +1672,8 @@ def attribute_to_text(
         noise_std = round(np.std(noise), 3)
         value_mean = round(np.mean(time_series), 3)
         value_std = round(np.std(time_series), 3)
+        trend = trend.tolist()
+        noise = noise.tolist()
         snr = round(
             (value_mean**2 + value_std**2) / (noise_mean**2 + noise_std**2 + 1e-5), 2
         )
@@ -1872,7 +1874,7 @@ def attribute_to_text(
                     index = [i for i in range(len(parsed_ts)) if i % period == 0]
                     period_series = [parsed_ts[i] for i in index]
                     diff = np.diff(period_series)
-                    diff = [round(num, 3) for num in diff]
+                    diff = [float(round(num, 3)) for num in diff]
                     detailed_description += (
                         f"# 4. Calculate the Trend\nAfter removing outliers and analyzing periodicity, we calculate the difference between points separated by one period. The differences between the 0th, Tth, 2Tth ...(T is the period) are as follows:  \n{str(list(diff))}  \n"
                         + "We analyze the differences and get the result. "
@@ -1880,7 +1882,7 @@ def attribute_to_text(
                         + "\n"
                     )
                 else:
-                    diff = [round(num, 3) for num in np.diff(parsed_ts)]
+                    diff = [float(round(num, 3)) for num in np.diff(parsed_ts)]
                     detailed_description += (
                         f"# 4. Calculate the Trend\nAfter removing outliers and analyzing periodicity, we calculate the difference between points:  \n{str(list(diff))}  \n"
                         + "We analyze the differences and get the result. "
@@ -1926,7 +1928,7 @@ def attribute_to_text(
                 else:
                     detailed_description += f"To determine if there are local changes in the time series, we need to analyze the data for significant deviations or patterns that indicate a local change. A local change could be a sudden drop, spike, or a change in the trend. Here's the step-by-step process to identify such changes:\n"
                     detailed_description += f"# Step 1: Calculate Differences Between Consecutive Points\nTo quantify the changes, compute the differences between consecutive values:\n$Difference = x_t - x_{{t-1}}$\n\n"
-                    diff = [round(num, 3) for num in np.diff(time_series)]
+                    diff = [float(round(num, 3)) for num in np.diff(time_series)]
                     for i in range(min(10, len(time_series) - 1)):
                         detailed_description += f"{str(i)}. {str(time_series[i+1])} - {str(time_series[i])} = {str(round(time_series[i+1]- time_series[i], 3))}\n"
                     detailed_description += f"......\n"
